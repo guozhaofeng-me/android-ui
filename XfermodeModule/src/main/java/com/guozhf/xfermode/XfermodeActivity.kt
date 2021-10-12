@@ -2,21 +2,39 @@ package com.guozhf.xfermode
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.library.flowlayout.FlowLayoutManager
+import com.library.flowlayout.SpaceItemDecoration
 import comguozhfxfermode.Mode
 
 class XfermodeActivity : AppCompatActivity() {
-    private val list: List<String> by lazy {
-        val list = mutableListOf<String>()
-        list.add(Mode.ADD.toString())
-        list.add(Mode.CLEAR.toString())
-        list.add(Mode.DARKEN.toString())
-        list.add(Mode.DST.toString())
+    private val list: List<PorterDuff.Mode> by lazy {
+        val list = mutableListOf<PorterDuff.Mode>()
+        list.add(PorterDuff.Mode.CLEAR)
+        list.add(PorterDuff.Mode.SRC)
+        list.add(PorterDuff.Mode.DST)
+        list.add(PorterDuff.Mode.SRC_OVER)
+        list.add(PorterDuff.Mode.DST_OVER)
+        list.add(PorterDuff.Mode.SRC_IN)
+        list.add(PorterDuff.Mode.DST_IN)
+        list.add(PorterDuff.Mode.SRC_OUT)
+        list.add(PorterDuff.Mode.DST_OUT)
+        list.add(PorterDuff.Mode.SRC_ATOP)
+        list.add(PorterDuff.Mode.DST_ATOP)
+        list.add(PorterDuff.Mode.XOR)
+        list.add(PorterDuff.Mode.DARKEN)
+        list.add(PorterDuff.Mode.LIGHTEN)
+        list.add(PorterDuff.Mode.MULTIPLY)
+        list.add(PorterDuff.Mode.SCREEN)
+        list.add(PorterDuff.Mode.ADD)
+        list.add(PorterDuff.Mode.OVERLAY)
         list
     }
 
@@ -26,12 +44,12 @@ class XfermodeActivity : AppCompatActivity() {
         adapter
     }
 
-    private var mode: String? = null
-
-    private var onConsoleListener: ((String) -> Unit) = {
+    private var onConsoleListener: ((PorterDuff.Mode) -> Unit) = {
         Toast.makeText(this, "item clicked: $it", Toast.LENGTH_SHORT).show()
-        mode = it
+        xfermodeView.setMode(it)
     }
+
+    private lateinit var xfermodeView: XfermodeView
 
     companion object {
         fun start(activity: Activity) {
@@ -46,8 +64,10 @@ class XfermodeActivity : AppCompatActivity() {
         val rvConsole = findViewById<RecyclerView>(R.id.console)
         rvConsole.apply {
             adapter = consoleAdapter
-            layoutManager = GridLayoutManager(this@XfermodeActivity, 5)
+            layoutManager = FlowLayoutManager()
+            addItemDecoration(SpaceItemDecoration(30));
         }
+        xfermodeView = findViewById<XfermodeView>(R.id.xfermode_view)
     }
 
 }
